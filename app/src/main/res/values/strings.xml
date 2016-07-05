@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Make It Dark!</string>
+    <string name="you_screen_is_on">Your Screen is on at</string>
+    <string name="of_your_life">of your life!</string>
+    <string name="percentage">0%</string>
+    <string name="pref_time_on_key">timeOnPref</string>
+    <string name="pref_time_off_key">timeOffPref</string>
+</resources>
