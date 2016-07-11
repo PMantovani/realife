@@ -1,8 +1,33 @@
 <resources>
     <string name="app_name">Make It Dark!</string>
-    <string name="you_screen_is_on">Your Screen is on at</string>
-    <string name="of_your_life">of your life!</string>
+    <string name="you_screen_is_on">You lost</string>
+    <string name="of_your_life">of your life on the phone!</string>
     <string name="percentage">0%</string>
+
+
     <string name="pref_time_on_key">timeOnPref</string>
     <string name="pref_time_off_key">timeOffPref</string>
+    <string name="pref_last_unlock_key">lastUnlockPref</string>
+    <string name="pref_last_lock_key">lastLockPref</string>
+
+
+    <string name="your_phone_is_on">You lost</string>
+    <string name="total_time">0 hours</string>
+    <string name="on_your_phone">on your phone!</string>
+
+    <string name="you_had">You had</string>
+    <string name="of_productivity">of productivity</string>
+
+    <string name="minutes">minutes</string>
+    <string name="hours">hours</string>
+    <string name="and">and</string>
+    <string name="seconds">seconds</string>
+    <string name="days">days</string>
+
+    <string name="days_letter">d</string>
+    <string name="hours_letter">h</string>
+    <string name="minutes_letter">m</string>
+    <string name="seconds_letter">s</string>
+
+    <string name="delete">Delete All Data</string>
 </resources>
