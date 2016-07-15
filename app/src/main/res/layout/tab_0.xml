@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="com.example.mantovani.makeitdark.MainActivity">
+<!--
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/you_screen_is_on"
+        android:layout_marginTop="40dp"
+        android:id="@+id/yourScreen_textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/percentage"
+        android:id="@+id/percentage_textView"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/yourScreen_textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:text="@string/of_your_life"
+        android:id="@+id/ofYourLife_textView"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/percentage_textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/your_phone_is_on"
+        android:id="@+id/youLost2_textView"
+        android:layout_marginTop="40dp"
+        android:layout_below="@+id/ofYourLife_textView"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/total_time"
+        android:id="@+id/hours_lost_textView"
+        android:layout_below="@+id/youLost2_textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/on_your_phone"
+        android:id="@+id/onYourPhone_textView"
+        android:layout_below="@+id/hours_lost_textView"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/you_had"
+        android:id="@+id/productivity_textView"
+        android:layout_below="@+id/onYourPhone_textView"
+        android:layout_marginTop="40dp"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/total_time"
+        android:id="@+id/timeOff_textView"
+        android:layout_below="@+id/productivity_textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/of_productivity"
+        android:id="@+id/ofProductivity_textView"
+        android:layout_below="@+id/timeOff_textView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp" />
+-->
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:id="@+id/pie_chart">
+    </com.github.mikephil.charting.charts.PieChart>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/screen_time"
+        android:id="@+id/screen_time_textView"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@+id/pie_chart"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="00:00:00"
+        android:id="@+id/time_on_textView"
+        android:layout_alignBottom="@+id/screen_time_textView"
+        android:layout_toRightOf="@+id/screen_time_textView"
+        android:layout_toEndOf="@+id/screen_time_textView" />
+
+</RelativeLayout>

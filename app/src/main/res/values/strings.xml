@@ -7,6 +7,8 @@
 
     <string name="pref_time_on_key">timeOnPref</string>
     <string name="pref_time_off_key">timeOffPref</string>
+    <string name="pref_hour_on_key">hourOnPref</string>
+    <string name="pref_hour_off_key">hourOffPref</string>
     <string name="pref_last_unlock_key">lastUnlockPref</string>
     <string name="pref_last_lock_key">lastLockPref</string>
 
@@ -30,4 +32,13 @@
     <string name="seconds_letter">s</string>
 
     <string name="delete">Delete All Data</string>
+
+    <string name="drawer_open">Drawer open</string>
+    <string name="drawer_close">Drawer close</string>
+
+    <string name="screen_usage">Screen Usage</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+
+    <string name="screen_time">Screen Time:</string>
 </resources>

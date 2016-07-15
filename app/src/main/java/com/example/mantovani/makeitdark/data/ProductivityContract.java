@@ -9,7 +9,7 @@ import android.provider.BaseColumns;
  * Created by Mantovani on 11-Jul-16.
  */
 public class ProductivityContract {
-    public static final String CONTENT_AUTHORITY = "com.example.android.sunshine.app";
+    public static final String CONTENT_AUTHORITY = "com.example.mantovani.makeitdark";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
     public static final String PATH_DAY = "day";
 
@@ -29,30 +29,30 @@ public class ProductivityContract {
 
 
         // Columns to store the percentage of time spent on the hour per hour
-        public static final String COLUMN_HOUR00 = "hour00";
-        public static final String COLUMN_HOUR01 = "hour01";
-        public static final String COLUMN_HOUR02 = "hour02";
-        public static final String COLUMN_HOUR03 = "hour03";
-        public static final String COLUMN_HOUR04 = "hour04";
-        public static final String COLUMN_HOUR05 = "hour05";
-        public static final String COLUMN_HOUR06 = "hour06";
-        public static final String COLUMN_HOUR07 = "hour07";
-        public static final String COLUMN_HOUR08 = "hour08";
-        public static final String COLUMN_HOUR09 = "hour09";
-        public static final String COLUMN_HOUR10 = "hour10";
-        public static final String COLUMN_HOUR11 = "hour11";
-        public static final String COLUMN_HOUR12 = "hour12";
-        public static final String COLUMN_HOUR13 = "hour13";
-        public static final String COLUMN_HOUR14 = "hour14";
-        public static final String COLUMN_HOUR15 = "hour15";
-        public static final String COLUMN_HOUR16 = "hour16";
-        public static final String COLUMN_HOUR17 = "hour17";
-        public static final String COLUMN_HOUR18 = "hour18";
-        public static final String COLUMN_HOUR19 = "hour19";
-        public static final String COLUMN_HOUR20 = "hour20";
-        public static final String COLUMN_HOUR21 = "hour21";
-        public static final String COLUMN_HOUR22 = "hour22";
-        public static final String COLUMN_HOUR23 = "hour23";
+        public static final String COLUMN_HOUR00 = "h0";
+        public static final String COLUMN_HOUR01 = "h1";
+        public static final String COLUMN_HOUR02 = "h2";
+        public static final String COLUMN_HOUR03 = "h3";
+        public static final String COLUMN_HOUR04 = "h4";
+        public static final String COLUMN_HOUR05 = "h5";
+        public static final String COLUMN_HOUR06 = "h6";
+        public static final String COLUMN_HOUR07 = "h7";
+        public static final String COLUMN_HOUR08 = "h8";
+        public static final String COLUMN_HOUR09 = "h9";
+        public static final String COLUMN_HOUR10 = "h10";
+        public static final String COLUMN_HOUR11 = "h11";
+        public static final String COLUMN_HOUR12 = "h12";
+        public static final String COLUMN_HOUR13 = "h13";
+        public static final String COLUMN_HOUR14 = "h14";
+        public static final String COLUMN_HOUR15 = "h15";
+        public static final String COLUMN_HOUR16 = "h16";
+        public static final String COLUMN_HOUR17 = "h17";
+        public static final String COLUMN_HOUR18 = "h18";
+        public static final String COLUMN_HOUR19 = "h19";
+        public static final String COLUMN_HOUR20 = "h20";
+        public static final String COLUMN_HOUR21 = "h21";
+        public static final String COLUMN_HOUR22 = "h22";
+        public static final String COLUMN_HOUR23 = "h23";
         public static final String COLUMN_DATE = "date";
 
         public static Uri buildDayUri(long id) {

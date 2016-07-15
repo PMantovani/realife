@@ -55,7 +55,7 @@ public class ProductivityProvider extends ContentProvider {
         final String authority = ProductivityContract.CONTENT_AUTHORITY;
 
         matcher.addURI(authority, ProductivityContract.PATH_DAY, DAY);
-        matcher.addURI(authority, ProductivityContract.PATH_DAY+"/#", DAY_WITH_HOUR);
+        matcher.addURI(authority, ProductivityContract.PATH_DAY+"/*", DAY_WITH_HOUR);
 
         return matcher;
     }
