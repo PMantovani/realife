@@ -19,6 +19,7 @@ public class ProductivityProvider extends ContentProvider {
 
     static final int DAY = 100;
     static final int DAY_WITH_HOUR = 101;
+    static final int DAY_WITH_INTERVAL = 102;
 
     //private static final SQLiteQueryBuilder sDayQueryBuilder;
 
@@ -32,6 +33,12 @@ public class ProductivityProvider extends ContentProvider {
                     "." + ProductivityContract.DayEntry.COLUMN_DATE +
                     " = ? AND " + ProductivityContract.DayEntry.COLUMN_DATE +
                     " = ? ";
+
+    private static final String sInitialAndFinalDaySelection =
+            ProductivityContract.DayEntry.TABLE_NAME +
+                    "." + ProductivityContract.DayEntry.COLUMN_DATE_INT +
+                    " >= ? AND " + ProductivityContract.DayEntry.COLUMN_DATE_INT +
+                    " <= ? ";
 
     private Cursor getDay(Uri uri, String[] projection, String sortOrder) {
         SQLiteDatabase db = mOpenHelper.getReadableDatabase();
@@ -49,13 +56,30 @@ public class ProductivityProvider extends ContentProvider {
         );
     }
 
-    // Creates an UriMatcher to distinguish between requests for DAY and DAY_WITH_HOUR
+    private Cursor getIntervalOfDays(Uri uri, String[] projection, String sortOrder) {
+        SQLiteDatabase db = mOpenHelper.getReadableDatabase();
+        String[] selectionArgs = ProductivityContract.DayEntry.getInitialAndFinalDatesFromUri(uri);
+
+        return db.query(
+                ProductivityContract.DayEntry.TABLE_NAME,
+                projection,
+                sInitialAndFinalDaySelection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    // Creates an UriMatcher to distinguish between requests for different Uris
     static UriMatcher buildUriMatcher() {
         UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = ProductivityContract.CONTENT_AUTHORITY;
 
-        matcher.addURI(authority, ProductivityContract.PATH_DAY, DAY);
-        matcher.addURI(authority, ProductivityContract.PATH_DAY+"/*", DAY_WITH_HOUR);
+        matcher.addURI(authority, ProductivityContract.PATH_DAY+"/*", DAY);
+        // Day with hour will not work for now, nor it is being used
+       // matcher.addURI(authority, ProductivityContract.PATH_DAY+"/*", DAY_WITH_HOUR);
+        matcher.addURI(authority, ProductivityContract.PATH_DAY+"/*/*", DAY_WITH_INTERVAL);
 
         return matcher;
     }
@@ -74,6 +98,8 @@ public class ProductivityProvider extends ContentProvider {
 
         switch (match) {
             case DAY:
+                return ProductivityContract.DayEntry.CONTENT_TYPE;
+            case DAY_WITH_INTERVAL:
                 return ProductivityContract.DayEntry.CONTENT_TYPE;
             case DAY_WITH_HOUR:
                 return ProductivityContract.DayEntry.CONTENT_ITEM_TYPE;
@@ -98,6 +124,11 @@ public class ProductivityProvider extends ContentProvider {
             case DAY_WITH_HOUR: {
                 // NOT sure whether this is correct
                 retCursor = getDay(uri, projection, sortOrder); // Should NOT work for now
+                break;
+            }
+            case DAY_WITH_INTERVAL: {
+                // Interval is included in uri
+                retCursor = getIntervalOfDays(uri, projection, sortOrder);
                 break;
             }
             default:

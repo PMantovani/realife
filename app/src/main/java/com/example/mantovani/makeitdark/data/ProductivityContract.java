@@ -5,6 +5,13 @@ import android.content.ContentUris;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 /**
  * Created by Mantovani on 11-Jul-16.
  */
@@ -53,7 +60,9 @@ public class ProductivityContract {
         public static final String COLUMN_HOUR21 = "h21";
         public static final String COLUMN_HOUR22 = "h22";
         public static final String COLUMN_HOUR23 = "h23";
+        public static final String COLUMN_DAY_PERCENTAGE = "percentage";
         public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_DATE_INT = "dateInt";
 
         public static Uri buildDayUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);
@@ -68,8 +77,50 @@ public class ProductivityContract {
             return CONTENT_URI.buildUpon().appendPath(day).build();
         }
 
+        public static Uri buildWithDayInterval (String day1, String day2) {
+            return CONTENT_URI.buildUpon().appendPath(day1)
+                    .appendPath(day2).build();
+        }
+
         public static String getDateFromUri(Uri uri) {
             return uri.getPathSegments().get(1);
+        }
+
+        public static String[] getInitialAndFinalDatesFromUri(Uri uri) {
+            String[] str = {uri.getPathSegments().get(1),
+                            uri.getPathSegments().get(2)};
+            return str;
+        }
+
+        public static String[] getDatesFromInitialDateAndInterval (Uri uri) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            ArrayList<String> datesArray = new ArrayList<>();
+            String date1 = uri.getPathSegments().get(1);
+            String date2 = uri.getPathSegments().get(2);
+
+            try {
+                Date parsedDate1 = sdf.parse(date1);
+                Date parsedDate2 = sdf.parse(date2);
+                Calendar cal1 = new GregorianCalendar();
+                Calendar cal2 = new GregorianCalendar();
+                cal1.setTime(parsedDate1);
+                cal2.setTime(parsedDate2);
+                int diffInDays = 0;
+
+                // Check if nothing goes wrong on the same date
+                while (parsedDate1.before(parsedDate2)) {
+                    datesArray.add(sdf.format(parsedDate1));
+                    cal1.add(Calendar.DATE, 1);
+                    diffInDays++;
+                    parsedDate1 = cal1.getTime();
+                }
+                String[] strArray = new String[datesArray.size()];
+                strArray = datesArray.toArray(strArray);
+                return strArray;
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return null;
+            }
         }
     }
 }

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Make It Dark!</string>
+    <string name="app_name">ReaLife</string>
     <string name="you_screen_is_on">You lost</string>
     <string name="of_your_life">of your life on the phone!</string>
     <string name="percentage">0%</string>
@@ -41,4 +41,22 @@
     <string name="off">Off</string>
 
     <string name="screen_time">Screen Time:</string>
+
+    <string name="sunday">Sunday</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
+
+    <string name="sun">Sun</string>
+    <string name="mon">Mon</string>
+    <string name="tue">Tue</string>
+    <string name="wed">Wed</string>
+    <string name="thu">Thu</string>
+    <string name="fri">Fri</string>
+    <string name="sat">Sat</string>
+
+    <string name="no_data">No Data Available... Yet!</string>
 </resources>

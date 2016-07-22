@@ -11,7 +11,7 @@ import com.example.mantovani.makeitdark.data.ProductivityContract.DayEntry;
 public class ProductivityDbHelper extends SQLiteOpenHelper{
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     static final String DATABASE_NAME = "productivity.db";
 
@@ -48,7 +48,8 @@ public class ProductivityDbHelper extends SQLiteOpenHelper{
                 DayEntry.COLUMN_HOUR21 + " REAL, " +
                 DayEntry.COLUMN_HOUR22 + " REAL, " +
                 DayEntry.COLUMN_HOUR23 + " REAL, " +
-                DayEntry.COLUMN_DATE + " TEXT NOT NULL UNIQUE " +
+                DayEntry.COLUMN_DATE + " TEXT NOT NULL UNIQUE, " +
+                DayEntry.COLUMN_DATE_INT + " INTEGER NOT NULL UNIQUE" +
                 " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_DAY_TABLE);

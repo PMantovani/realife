@@ -3,6 +3,7 @@ package com.example.mantovani.makeitdark;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,6 +12,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.mantovani.makeitdark.data.ProductivityContract;
 import com.github.mikephil.charting.charts.BarChart;
@@ -60,6 +62,7 @@ public class Tab1Fragment extends Fragment {
         barChart = (BarChart) getActivity().findViewById(R.id.bar_graph);
 
         List<BarEntry> entries = new ArrayList<>();
+        int colors[] = new int[24];
         ContentResolver resolver = getActivity().getContentResolver();
 
         // Get format of hour
@@ -73,17 +76,32 @@ public class Tab1Fragment extends Fragment {
         Cursor cursor = resolver.query(dateUri, null, null, null, null);
         if (cursor.moveToFirst()) {
             for (int i=0; i<24; i++) {
-                if (i != hourNow) // Just get the info from db
-                    entries.add(new BarEntry(i, 100 * cursor.getFloat(cursor.getColumnIndex("h"+i))));
+                float percentage = 0;
+                if (i != hourNow) { // Just get the info from db
+                    percentage = 100 * cursor.getFloat(cursor.getColumnIndex("h" + Integer.toString(i)));
+                    entries.add(new BarEntry(i, percentage));
+                }
                 else { // Current hour = calculate
                     // Implements percentage for the current hour, since it's still not in the database
                     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on_key), 1);
+
+                    long now = System.currentTimeMillis();
+                    long lastUnlock = sharedPrefs.getLong(getString(R.string.pref_last_unlock_key), now);
+                    long diff = now - lastUnlock;
+                    hourOn += diff;
+
                     float hourOff = (float) sharedPrefs.getLong(getString(R.string.pref_hour_off_key), 0);
-                    float percentage = 100 * hourOn/(hourOff+hourOn);
+                    percentage = 100 * hourOn/(hourOff+hourOn);
                     entries.add(new BarEntry(hourNow, percentage));
                 }
+                colors[i] = calculateColor(percentage); // Calculate the color of the entry
             }
+        }
+        else {
+            // In case no data is available, display TextView with the info
+            TextView noData = (TextView) getActivity().findViewById(R.id.no_data_textView);
+            noData.setVisibility(TextView.VISIBLE);
         }
         cursor.close();
 
@@ -91,12 +109,12 @@ public class Tab1Fragment extends Fragment {
         barDataSet.setValueFormatter(new MyValueFormatter());
         barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
         barDataSet.setValueTextSize(8f);
+        barDataSet.setColors(colors); // Insert colors in graph
 
         final String[] xValues = new String[] {"12AM", "1AM", "2AM", "3AM", "4AM", "5AM"
                 , "6AM", "7AM", "8AM", "9AM", "10AM", "11AM", "12PM", "1PM", "2PM",
                 "3PM", "4PM", "5PM", "6PM", "7PM", "8PM", "9PM", "10PM", "11PM"};
-        /*final String[] xValues = new String[] {"00", "01", "02", "03", "04", "05", "06", "07",
-                "08","09","10","11","12","13","14","15","16","17","18","19","20","21","22","23"};*/
+
         XAxis xAxis = barChart.getXAxis();
         xAxis.setValueFormatter(new AxisValueFormatter() {
             @Override
@@ -140,6 +158,24 @@ public class Tab1Fragment extends Fragment {
         barChart.invalidate();
 
 
+    }
+
+    private int calculateColor(float percent) {
+        int green = Color.rgb(153, 255, 153);
+        int yellow = Color.rgb(255, 255, 153);
+        int red = Color.rgb(255, 153, 153);
+        if (percent < 10) {
+            // Interpolate between green and yellow
+            return Color.rgb(153+(int)((10.2)*percent),255,153);
+        }
+        else if (percent < 25) {
+            // Interpolate between yellow and red
+            return Color.rgb(255,255-(int)(6.8*(percent-10)),153);
+        }
+        else {
+            // Return red
+            return (Color.rgb(255,153,153));
+        }
     }
 
     // Formatter class to remove decimal digits on bar graph

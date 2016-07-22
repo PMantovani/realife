@@ -139,32 +139,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-/*
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        // Delete all recorded time
-        if (id == R.id.delete_all) {
-            SharedPreferences sharedPrefs =
-                    PreferenceManager.getDefaultSharedPreferences(this);
-
-            sharedPrefs.edit()
-                    .clear()
-                    .putLong(getString(R.string.pref_last_unlock_key), System.currentTimeMillis())
-                    .putLong(getString(R.string.pref_last_lock_key), System.currentTimeMillis())
-                    .putLong(getString(R.string.pref_time_on_key), 1)
-                    .putLong(getString(R.string.pref_time_off_key), 0)
-                    .commit();
-            setTextViews();
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
-
 }
 
 // Exemplo de como funciona o content provider. Elaborar queries em cima deste modelo.
