@@ -1,6 +1,7 @@
 package com.example.mantovani.makeitdark;
 
 import android.app.AlarmManager;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -17,6 +18,7 @@ import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -84,7 +86,8 @@ public class MonitorService extends Service {
                 lastScreenUnlock = System.currentTimeMillis();
 
                 float percentage = (float)(hourOn)/(float)(hourOff+hourOn);
-                addToDatabase(percentage);
+                //addToDatabase(percentage);
+                addToDatabase(hourOn);
 
                 hourOff = 0;
                 hourOn = 1;
@@ -107,7 +110,7 @@ public class MonitorService extends Service {
                     alarm.setExact(AlarmManager.RTC_WAKEUP, timeInMillis, pintent);
             }
 
-            private void addToDatabase(float percentage) {
+            private void addToDatabase(float timeOn) {
                 // Get past hour, so if your alarm received at 15:01, you will update values
                 // from 14:00 to 15:00. Minutes and seconds don't matter here
                 Calendar lastHour = new GregorianCalendar();
@@ -125,7 +128,7 @@ public class MonitorService extends Service {
                     ContentValues values = new ContentValues();
                     // Integer.toString() should be the String equivalent
                     // of the hour column in the contract
-                    values.put("h"+Integer.toString(hour), percentage);
+                    values.put("h"+Integer.toString(hour), timeOn);
                     String[] selections = {new SimpleDateFormat("dd/MM/yyyy").format(dateLastHour)};
                     getContentResolver().update(dateUri, values, "DATE = ?", selections);
                 }
@@ -133,15 +136,18 @@ public class MonitorService extends Service {
                 else {
                     //Uri insertUri = ProductivityContract.DayEntry.CONTENT_URI;
                     ContentValues values = new ContentValues();
-                    values.put("h"+Integer.toString(hour), percentage);
+                    values.put("h"+Integer.toString(hour), timeOn);
                     values.put(ProductivityContract.DayEntry.COLUMN_DATE,
                             new SimpleDateFormat("dd/MM/yyyy").format(dateLastHour));
                     values.put(ProductivityContract.DayEntry.COLUMN_DATE_INT,
                             Integer.parseInt(new SimpleDateFormat("yyyyMMdd").format(dateLastHour)));
                     getContentResolver().insert(dateUri, values);
                 }
-                Log.d("MAKEITDARK", "INSERTED TO DB LAST HOUR: "+Float.toString(percentage));
+                Log.d("MAKEITDARK", "INSERTED TO DB LAST HOUR: "+Float.toString(timeOn));
                 cursor.close();
+
+                // Test notification
+                createNotification();
             }
         };
 
@@ -169,13 +175,35 @@ public class MonitorService extends Service {
         }
     }
 
-    // TODO: IMPLEMENT NOTIFICATION
     public void createNotification() {
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(getApplicationContext());
         mBuilder.setSmallIcon(R.drawable.ic_notification);
-        mBuilder.setContentTitle("My Title");
-        mBuilder.setContentText("My Notification Text");
+        mBuilder.setContentTitle("ReaLife");
+        mBuilder.setContentText("You spent "+Long.toString(hourOn/(60*1000))+" minutes on the phone last hour!");
+        mBuilder.setAutoCancel(true); // Remove notification automatically after clicking in it
+        // Create explicit intent to be executed when notification is clicked
+        Intent resultIntent = new Intent(this, MainActivity.class);
+
+        // The stack builder object will contain an artificial back stack for the
+        // started Activity.
+        // This ensures that navigating backward from the Activity leads out of
+        // your application to the Home screen.
+        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
+        // Adds the back stack for the Intent (but not the Intent itself)
+        stackBuilder.addParentStack(MainActivity.class);
+        // Adds the Intent that starts the Activity to the top of the stack
+        stackBuilder.addNextIntent(resultIntent);
+        PendingIntent resultPendingIntent =
+                stackBuilder.getPendingIntent(
+                        0,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        mBuilder.setContentIntent(resultPendingIntent); // Associate notification with intent
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(100, mBuilder.build());
     }
 
     private void readData() {

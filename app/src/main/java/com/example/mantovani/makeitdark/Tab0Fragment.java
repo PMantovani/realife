@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.PieChart;
@@ -21,7 +22,6 @@ import com.github.mikephil.charting.formatter.PercentFormatter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -32,6 +32,7 @@ public class Tab0Fragment extends Fragment {
     PieChart mPieChart;
     View rootView;
     TextView timeOnTextView;
+    SeekBar goalSeekBar;
     SharedPreferences sharedPrefs;
     Timer guiUpdateTimer;
     long timeOn;
@@ -41,7 +42,7 @@ public class Tab0Fragment extends Fragment {
         public void run() {
             // Sets text view and increases one second in total time on
             timeOn += 1000;
-            timeOnTextView.setText(formatTime(timeOn));
+            timeOnTextView.setText(Utilities.formatTime(timeOn, getContext()));
         }
     };
 
@@ -73,7 +74,21 @@ public class Tab0Fragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.tab_0, container, false);
         timeOnTextView = (TextView) rootView.findViewById(R.id.time_on_textView);
+        goalSeekBar = (SeekBar) rootView.findViewById(R.id.goal_seekBar);
+        goalSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            }
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
 
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                //updateGUI();
+            }
+        });
+        
         return rootView;
     }
 
@@ -115,17 +130,13 @@ public class Tab0Fragment extends Fragment {
         List<PieEntry> entries = new ArrayList<>();
         long timeOff = sharedPrefs.getLong(getString(R.string.pref_time_off_key), 0);
 
-        // Set TextView for timeOn
-        //TextView timeOnTextView = (TextView) getActivity().findViewById(R.id.time_on_textView);
-        //timeOnTextView.setText(formatTime(timeOn));
-
         entries.add(new PieEntry(timeOn, getString(R.string.on)));
         entries.add(new PieEntry(timeOff, getString(R.string.off)));
 
         PieDataSet dataSet = new PieDataSet(entries, "% on phone");
         dataSet.setValueFormatter(new PercentFormatter());
         // Red and blue
-            int[] colors = {new Color().rgb(255,153,153), new Color().rgb(153,204,255)};
+            int[] colors = {Color.rgb(255,153,153), Color.rgb(153,204,255)};
         dataSet.setColors(colors);
         dataSet.setValueTextSize(20f);
 
@@ -144,33 +155,6 @@ public class Tab0Fragment extends Fragment {
 
     }
 
-    private String formatTime(long milliseconds) {
-        long seconds = milliseconds/1000;
-        String formatted;
-
-        int days = (int)(seconds/86400);
-        int hours = (int)(seconds-(days*86400))/3600;
-        int minutes = (int)(seconds-(days*86400)-(hours*3600))/60;
-        seconds = (int)(seconds-(days*86400)-(hours*3600)-(minutes*60));
-
-        if (days >= 1) { // More than a day
-            formatted = String.format(Locale.US, "%1$d%2$s%3$d%4$s%5$d%6$s%7$d%8$s", days,
-                    getString(R.string.days_letter), hours, getString(R.string.hours_letter), minutes, getString(R.string.minutes_letter), seconds, getString(R.string.seconds_letter));
-        }
-        else if (hours >= 1) {  // More than an hour
-            formatted = String.format(Locale.US, "%1$d%2$s%3$d%4$s%5$d%6$s", hours,
-                    getString(R.string.hours_letter), minutes, getString(R.string.minutes_letter), seconds, getString(R.string.seconds_letter));
-        }
-        else if (minutes >= 1) { // More than a minute
-            formatted = String.format(Locale.US, "%1$d%2$s%3$d%4$s", minutes,
-                    getString(R.string.minutes_letter), seconds, getString(R.string.seconds_letter));
-        }
-        else {
-            formatted = String.format(Locale.US, "%1$d%2$s", seconds,
-                    getString(R.string.seconds_letter));
-        }
-        return formatted;
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -191,7 +175,7 @@ public class Tab0Fragment extends Fragment {
                     .putLong(getString(R.string.pref_last_lock_key), System.currentTimeMillis())
                     .putLong(getString(R.string.pref_time_on_key), 1)
                     .putLong(getString(R.string.pref_time_off_key), 0)
-                    .commit();
+                    .apply();
           //  setTextViews();
         }
         return super.onOptionsItemSelected(item);

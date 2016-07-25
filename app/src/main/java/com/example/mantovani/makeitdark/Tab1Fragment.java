@@ -3,7 +3,6 @@ package com.example.mantovani.makeitdark;
 import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -35,9 +34,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-/**
- * Created by hp1 on 21-01-2015.
- */
 public class Tab1Fragment extends Fragment {
 
     View rootView;
@@ -77,9 +73,11 @@ public class Tab1Fragment extends Fragment {
         if (cursor.moveToFirst()) {
             for (int i=0; i<24; i++) {
                 float percentage = 0;
+                int minutes = 0;
                 if (i != hourNow) { // Just get the info from db
                     percentage = 100 * cursor.getFloat(cursor.getColumnIndex("h" + Integer.toString(i)));
-                    entries.add(new BarEntry(i, percentage));
+                    minutes = (int)(cursor.getFloat(cursor.getColumnIndex("h" + Integer.toString(i)))/(60*1000));
+                    entries.add(new BarEntry(i, /*percentage*/minutes));
                 }
                 else { // Current hour = calculate
                     // Implements percentage for the current hour, since it's still not in the database
@@ -93,9 +91,10 @@ public class Tab1Fragment extends Fragment {
 
                     float hourOff = (float) sharedPrefs.getLong(getString(R.string.pref_hour_off_key), 0);
                     percentage = 100 * hourOn/(hourOff+hourOn);
-                    entries.add(new BarEntry(hourNow, percentage));
+                    minutes = (int)hourOn/(60*1000);
+                    entries.add(new BarEntry(hourNow, /*percentage*/minutes));
                 }
-                colors[i] = calculateColor(percentage); // Calculate the color of the entry
+                colors[i] = Utilities.calculateColor(minutes/*percentage*/); // Calculate the color of the entry
             }
         }
         else {
@@ -139,7 +138,7 @@ public class Tab1Fragment extends Fragment {
         leftAxis.setDrawAxisLine(false); // no axis line
         //leftAxis.setDrawGridLines(false); // no grid lines
         leftAxis.setDrawZeroLine(true); // draw a zero line
-        leftAxis.setAxisMaxValue(100f); // set maximum value to 100%
+        leftAxis.setAxisMaxValue(60f); // set maximum value to 100%
         barChart.getAxisRight().setEnabled(false); // no right axis
 
 
@@ -160,24 +159,6 @@ public class Tab1Fragment extends Fragment {
 
     }
 
-    private int calculateColor(float percent) {
-        int green = Color.rgb(153, 255, 153);
-        int yellow = Color.rgb(255, 255, 153);
-        int red = Color.rgb(255, 153, 153);
-        if (percent < 10) {
-            // Interpolate between green and yellow
-            return Color.rgb(153+(int)((10.2)*percent),255,153);
-        }
-        else if (percent < 25) {
-            // Interpolate between yellow and red
-            return Color.rgb(255,255-(int)(6.8*(percent-10)),153);
-        }
-        else {
-            // Return red
-            return (Color.rgb(255,153,153));
-        }
-    }
-
     // Formatter class to remove decimal digits on bar graph
     class MyValueFormatter implements ValueFormatter {
         private DecimalFormat mFormat;
@@ -189,8 +170,10 @@ public class Tab1Fragment extends Fragment {
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
             // write your logic here
-            if (value >= 1)
-                return mFormat.format(value) + "%"; // e.g. append a % sign
+            if (value >= 1) // If more than one minute
+                // Multiplies by 60*1000 because formatTime works in milliseconds
+                return Utilities.formatTime((long) value*60*1000, false, getContext());
+                //return mFormat.format(value) + "m";//"%"; // e.g. append a % sign
             else
                 return "";
         }

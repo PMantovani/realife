@@ -2,7 +2,6 @@ package com.example.mantovani.makeitdark;
 
 import android.content.ContentResolver;
 import android.database.Cursor;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -56,13 +55,13 @@ public class Tab2Fragment extends Fragment {
         int day = cal.get(Calendar.DATE);
 
         // Query all weeks' percentages of usage of the week
-        float[] percents = queryWeekFromDb();
+        float[] minutes = queryWeekFromDb();
         // Adds all those values in BarEntries
         List<BarEntry> entries = new ArrayList<>();
-        int[] colors = new int[percents.length];
-        for (int i=0; i<percents.length; i++) {
-            entries.add(new BarEntry(i, percents[i]));
-            colors[i] = calculateColor(percents[i]); // Calculate the color of the entry
+        int[] colors = new int[minutes.length];
+        for (int i=0; i<minutes.length; i++) {
+            entries.add(new BarEntry(i, minutes[i]));
+            colors[i] = Utilities.calculateColor((long)minutes[i]); // Calculate the color of the entry
         }
 
         // Creates DataSet and sets some configs
@@ -103,7 +102,7 @@ public class Tab2Fragment extends Fragment {
         leftAxis.setDrawAxisLine(false); // no axis line
         //leftAxis.setDrawGridLines(false); // no grid lines
         leftAxis.setDrawZeroLine(true); // draw a zero line
-        leftAxis.setAxisMaxValue(100f); // set maximum value to 100%
+        leftAxis.setAxisMaxValue(24f); // set maximum value to 100%
         weekBarChart.getAxisRight().setEnabled(false); // no right axis
 
         // Associate chart with dataset. BarData only serves as an intermediate.
@@ -122,24 +121,6 @@ public class Tab2Fragment extends Fragment {
 
     }
 
-    private int calculateColor(float percent) {
-        int green = Color.rgb(153, 255, 153);
-        int yellow = Color.rgb(255, 255, 153);
-        int red = Color.rgb(255, 153, 153);
-        if (percent < 10) {
-            // Interpolate between green and yellow
-            return Color.rgb(153+(int)((10.2)*percent),255,153);
-        }
-        else if (percent < 25) {
-            // Interpolate between yellow and red
-            return Color.rgb(255,255-(int)(6.8*(percent-10)),153);
-        }
-        else {
-            // Return red
-            return (Color.rgb(255,153,153));
-        }
-    }
-
     // Formatter class to remove decimal digits on bar graph and append % sign
     class MyValueFormatter implements ValueFormatter {
         private DecimalFormat mFormat;
@@ -151,9 +132,10 @@ public class Tab2Fragment extends Fragment {
         @Override
         public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
             // write your logic here
-            if (value >= 1)
-                return mFormat.format(value) + "%"; // e.g. append a % sign
-            else
+            if (value >= 1) // If more than one minute
+                // Multiplies by 60*1000 because formatTime works in milliseconds
+                return Utilities.formatTime((long) value*60*1000, false, getContext());
+            else // Don't show anything if less than a minute
                 return "";
         }
     }
@@ -178,7 +160,8 @@ public class Tab2Fragment extends Fragment {
                 String dateCursor = cursor.getString(
                         cursor.getColumnIndex(ProductivityContract.DayEntry.COLUMN_DATE_INT));
                 if (dateCursor.equals(sdf.format(cal.getTime()))) {
-                    list.add(getAverage(cursor));
+                    // Divide by (60*1000) to convert to minutes
+                    list.add(getDayAverage(cursor)/(60*1000));
                     cursor.moveToNext();
                     cal.add(Calendar.DATE, 1);
                 }
@@ -206,12 +189,12 @@ public class Tab2Fragment extends Fragment {
     }
 
     // Gets average percentage of day in the cursor
-    private float getAverage(Cursor cursor) {
+    private float getDayAverage(Cursor cursor) {
         float total = 0;
         for (int i=0; i<24; i++) {
             total += cursor.getFloat(cursor.getColumnIndex("h"+i));
         }
         // Divide by 24 hours of the day
-        return (100*total/24);
+        return (total/24);
     }
 }
