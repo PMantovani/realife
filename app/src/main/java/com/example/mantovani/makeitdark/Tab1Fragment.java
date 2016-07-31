@@ -11,7 +11,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.example.mantovani.makeitdark.data.ProductivityContract;
 import com.github.mikephil.charting.charts.BarChart;
@@ -72,12 +71,10 @@ public class Tab1Fragment extends Fragment {
         Cursor cursor = resolver.query(dateUri, null, null, null, null);
         if (cursor.moveToFirst()) {
             for (int i=0; i<24; i++) {
-                float percentage = 0;
                 int minutes = 0;
                 if (i != hourNow) { // Just get the info from db
-                    percentage = 100 * cursor.getFloat(cursor.getColumnIndex("h" + Integer.toString(i)));
                     minutes = (int)(cursor.getFloat(cursor.getColumnIndex("h" + Integer.toString(i)))/(60*1000));
-                    entries.add(new BarEntry(i, /*percentage*/minutes));
+                    entries.add(new BarEntry(i, minutes));
                 }
                 else { // Current hour = calculate
                     // Implements percentage for the current hour, since it's still not in the database
@@ -89,18 +86,27 @@ public class Tab1Fragment extends Fragment {
                     long diff = now - lastUnlock;
                     hourOn += diff;
 
-                    float hourOff = (float) sharedPrefs.getLong(getString(R.string.pref_hour_off_key), 0);
-                    percentage = 100 * hourOn/(hourOff+hourOn);
                     minutes = (int)hourOn/(60*1000);
-                    entries.add(new BarEntry(hourNow, /*percentage*/minutes));
+                    entries.add(new BarEntry(hourNow, minutes));
                 }
-                colors[i] = Utilities.calculateColor(minutes/*percentage*/); // Calculate the color of the entry
+                colors[i] = Utilities.calculateColor(minutes); // Calculate the color of the entry
             }
         }
         else {
             // In case no data is available, display TextView with the info
-            TextView noData = (TextView) getActivity().findViewById(R.id.no_data_textView);
-            noData.setVisibility(TextView.VISIBLE);
+            //TextView noData = (TextView) getActivity().findViewById(R.id.no_data_textView);
+            //noData.setVisibility(TextView.VISIBLE);
+
+            SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+            float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on_key), 1);
+
+            long now = System.currentTimeMillis();
+            long lastUnlock = sharedPrefs.getLong(getString(R.string.pref_last_unlock_key), now);
+            long diff = now - lastUnlock;
+            hourOn += diff;
+
+            int minutes = (int)hourOn/(60*1000);
+            entries.add(new BarEntry(hourNow, minutes));
         }
         cursor.close();
 

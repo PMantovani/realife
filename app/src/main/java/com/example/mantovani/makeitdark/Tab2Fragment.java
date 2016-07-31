@@ -1,9 +1,11 @@
 package com.example.mantovani.makeitdark;
 
 import android.content.ContentResolver;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -51,14 +53,11 @@ public class Tab2Fragment extends Fragment {
     private void updateGUI() {
         weekBarChart = (BarChart) rootView.findViewById(R.id.week_bar_graph);
 
-        Calendar cal = new GregorianCalendar();
-        int day = cal.get(Calendar.DATE);
-
         // Query all weeks' percentages of usage of the week
         float[] minutes = queryWeekFromDb();
         // Adds all those values in BarEntries
         List<BarEntry> entries = new ArrayList<>();
-        int[] colors = new int[minutes.length];
+        int[] colors = new int[minutes.length+1];
         for (int i=0; i<minutes.length; i++) {
             entries.add(new BarEntry(i, minutes[i]));
             colors[i] = Utilities.calculateColor((long)minutes[i]/24); // Calculate the color of the entry
@@ -86,14 +85,15 @@ public class Tab2Fragment extends Fragment {
                 Calendar cal = new GregorianCalendar();
                 // Adds current day of the week to adjust the offset. Subtracts 1 because sunday
                 // starts at 1, and at 0 in the string array
-                return xLabels[(int)((value)+cal.get(Calendar.DAY_OF_WEEK)-1) % xLabels.length];
+                int index = (int)((value)+cal.get(Calendar.DAY_OF_WEEK)) % xLabels.length;
+                return xLabels[(int)((value)+cal.get(Calendar.DAY_OF_WEEK)) % xLabels.length];
             }
             @Override
             public int getDecimalDigits() {
                 return 0;
             }
         });
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE); // Labels below and inside the graph
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM); // Labels below and inside the graph
         xAxis.setDrawAxisLine(false); // Do not draw border below
         xAxis.setDrawGridLines(false);
 
@@ -146,19 +146,20 @@ public class Tab2Fragment extends Fragment {
         ContentResolver resolver = getActivity().getContentResolver();
         ArrayList<Float> list = new ArrayList<>();
 
-        // Get today in String format
+        // Get yesterday in String format (today will be added later)
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         Calendar cal = new GregorianCalendar();
+        cal.add(Calendar.DATE, -1);
         String date2 = sdf.format(cal.getTime());
         // Get last week
-        cal.add(Calendar.DATE, -7);
+        cal.add(Calendar.DATE, -5);
         String date1 = sdf.format(cal.getTime());
 
         Uri dateUri = ProductivityContract.DayEntry.buildWithDayInterval(date1, date2);
 
         Cursor cursor = resolver.query(dateUri, null, null, null, null);
         if (cursor.moveToFirst() && !cursor.isLast()) {
-            while (!cursor.isLast()) {
+            do {
                 String dateCursor = cursor.getString(
                         cursor.getColumnIndex(ProductivityContract.DayEntry.COLUMN_DATE_INT));
                 if (dateCursor.equals(sdf.format(cal.getTime()))) {
@@ -172,7 +173,7 @@ public class Tab2Fragment extends Fragment {
                     list.add((float)0);
                     cal.add(Calendar.DATE, 1);
                 }
-            }
+            } while (!cursor.isAfterLast());
         }
         else {
             // In case no data is available, display TextView with the info
@@ -180,6 +181,19 @@ public class Tab2Fragment extends Fragment {
             noData.setVisibility(TextView.VISIBLE);
         }
         cursor.close();
+
+        // Adds today to list
+        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        long today = sharedPrefs.getLong(getString(R.string.pref_daily_on_key), 0);
+        long now = System.currentTimeMillis();
+        long lastUnlock = sharedPrefs.getLong(getString(R.string.pref_last_unlock_key), now);
+        long lastLock = sharedPrefs.getLong(getString(R.string.pref_last_lock_key), now);
+        long diff = now - lastUnlock;
+        if (lastUnlock >= lastLock) {
+            today += diff;
+        }
+        today = today / (60 * 1000);
+        list.add((float)today);
 
         // Converts to primitive type
         float[] retFloat = new float[list.size()];

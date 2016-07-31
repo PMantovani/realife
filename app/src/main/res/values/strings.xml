@@ -32,6 +32,7 @@
     <string name="hours_letter">h</string>
     <string name="minutes_letter">m</string>
     <string name="seconds_letter">s</string>
+    <string name="millisec_letter">ms</string>
 
     <string name="delete">Delete All Data</string>
 

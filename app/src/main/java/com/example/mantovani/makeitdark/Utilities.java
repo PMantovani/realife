@@ -10,6 +10,22 @@ import java.util.Locale;
  */
 public class Utilities {
 
+    public static String formatTime(long time, String type, boolean showSeconds, Context context) {
+        if (type.equals(context.getString(R.string.days_letter)))
+            time = time * 24 * 60 * 60 * 1000;
+        else if (type.equals(context.getString(R.string.hours_letter)))
+            time = time * 60 * 60 * 1000;
+        else if (type.equals(context.getString(R.string.minutes_letter)))
+            time = time * 60 * 1000;
+        else if (type.equals(context.getString(R.string.seconds_letter)))
+            time = time * 1000;
+        else if (type.equals(context.getString(R.string.millisec_letter)))
+            time = time * 1;
+        else
+            throw new IllegalArgumentException("Unknown type of time.");
+        return formatTime(time, showSeconds, context);
+    }
+
     public static String formatTime(long milliseconds, boolean showSeconds, Context context) {
         long seconds = milliseconds/1000;
         String formatted;
@@ -85,7 +101,10 @@ public class Utilities {
         final int FIRST_CUT = 5;
         final int SECOND_CUT = 30;
         final int THIRD_CUT = 60;
-        if (minutes < FIRST_CUT) {
+        if (minutes < 0) {
+            return Color.BLACK;
+        }
+        else if (minutes < FIRST_CUT) {
             // Interpolate between green and yellow
             return Color.rgb(153+(int)((102/FIRST_CUT)*minutes),255,153);
         }
