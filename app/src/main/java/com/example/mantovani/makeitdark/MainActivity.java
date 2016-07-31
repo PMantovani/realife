@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
             // open daily report fragment
             // Insert the fragment by replacing any existing fragment
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.content_frame, new Tab0Fragment())
+                    .replace(R.id.content_frame, new Tab0Fragment_build()) //TODO: ARRUMAR
                     .commit();
         }
         else if (position == 1) {

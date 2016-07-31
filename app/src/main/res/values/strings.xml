@@ -11,6 +11,8 @@
     <string name="pref_hour_off_key">hourOffPref</string>
     <string name="pref_last_unlock_key">lastUnlockPref</string>
     <string name="pref_last_lock_key">lastLockPref</string>
+    <string name="pref_daily_on_key">dailyOnPref</string>
+    <string name="pref_goal_key">goalPref</string>
 
 
     <string name="your_phone_is_on">You lost</string>
@@ -39,6 +41,7 @@
     <string name="screen_usage">Screen Usage</string>
     <string name="on">On</string>
     <string name="off">Off</string>
+    <string name="toGoal">To Goal</string>
 
     <string name="screen_time">Screen Time:</string>
 
@@ -59,4 +62,5 @@
     <string name="sat">Sat</string>
 
     <string name="no_data">No Data Available... Yet!</string>
+    <string name="no_goal">No goal</string>
 </resources>

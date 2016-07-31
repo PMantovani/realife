@@ -61,7 +61,7 @@ public class Tab2Fragment extends Fragment {
         int[] colors = new int[minutes.length];
         for (int i=0; i<minutes.length; i++) {
             entries.add(new BarEntry(i, minutes[i]));
-            colors[i] = Utilities.calculateColor((long)minutes[i]); // Calculate the color of the entry
+            colors[i] = Utilities.calculateColor((long)minutes[i]/24); // Calculate the color of the entry
         }
 
         // Creates DataSet and sets some configs
@@ -73,7 +73,7 @@ public class Tab2Fragment extends Fragment {
 
         // Sets x-axis configurations and labels
         XAxis xAxis = weekBarChart.getXAxis();
-        xAxis.setLabelCount(7, true);
+        xAxis.setLabelCount(7, false);
         // Array of strings with the abbreviations of week days
         final String[] xLabels = {getString(R.string.sun),getString(R.string.mon),
                 getString(R.string.tue),getString(R.string.wed), getString(R.string.thu),
@@ -95,14 +95,15 @@ public class Tab2Fragment extends Fragment {
         });
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM_INSIDE); // Labels below and inside the graph
         xAxis.setDrawAxisLine(false); // Do not draw border below
+        xAxis.setDrawGridLines(false);
 
         // Sets configs of the YAxis, aka LeftAxis
         YAxis leftAxis = weekBarChart.getAxisLeft();
-        //leftAxis.setDrawLabels(false); // no axis labels
+        leftAxis.setDrawLabels(false); // no axis labels
         leftAxis.setDrawAxisLine(false); // no axis line
-        //leftAxis.setDrawGridLines(false); // no grid lines
+        leftAxis.setDrawGridLines(false); // no grid lines
         leftAxis.setDrawZeroLine(true); // draw a zero line
-        leftAxis.setAxisMaxValue(24f); // set maximum value to 100%
+       // leftAxis.setAxisMaxValue(24f); // set maximum value to 100%
         weekBarChart.getAxisRight().setEnabled(false); // no right axis
 
         // Associate chart with dataset. BarData only serves as an intermediate.
@@ -111,6 +112,7 @@ public class Tab2Fragment extends Fragment {
         // Sets configs for chart
         weekBarChart.setTouchEnabled(true); // Enable touch in the graph
         weekBarChart.setDragEnabled(true);  // Enables drag of the graph
+        weekBarChart.setFitBars(true);
         weekBarChart.setScaleEnabled(false); // Disables scaling
         weekBarChart.setDrawGridBackground(false); // Disables background grid
         weekBarChart.setGridBackgroundColor(0); // Sets background color
@@ -161,7 +163,7 @@ public class Tab2Fragment extends Fragment {
                         cursor.getColumnIndex(ProductivityContract.DayEntry.COLUMN_DATE_INT));
                 if (dateCursor.equals(sdf.format(cal.getTime()))) {
                     // Divide by (60*1000) to convert to minutes
-                    list.add(getDayAverage(cursor)/(60*1000));
+                    list.add(getDaySum(cursor)/(60*1000));
                     cursor.moveToNext();
                     cal.add(Calendar.DATE, 1);
                 }
@@ -189,12 +191,12 @@ public class Tab2Fragment extends Fragment {
     }
 
     // Gets average percentage of day in the cursor
-    private float getDayAverage(Cursor cursor) {
+    private float getDaySum(Cursor cursor) {
         float total = 0;
         for (int i=0; i<24; i++) {
             total += cursor.getFloat(cursor.getColumnIndex("h"+i));
         }
         // Divide by 24 hours of the day
-        return (total/24);
+        return total;
     }
 }

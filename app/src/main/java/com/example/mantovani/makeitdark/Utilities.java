@@ -70,6 +70,10 @@ public class Utilities {
         return formatted;
     }
 
+    public static String formatTimeMinutes(long minutes, boolean showSeconds, Context context) {
+        return formatTime(minutes*60*1000, showSeconds, context);
+    }
+
     public static String formatTime(long milliseconds, Context context) {
         return formatTime(milliseconds, true, context);
     }

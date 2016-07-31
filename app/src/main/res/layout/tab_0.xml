@@ -44,7 +44,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:id="@+id/goal_seekBar"
-        android:max="120"
+        android:max="1200"
         android:layout_marginTop="60dp"
         android:layout_below="@+id/time_on_textView"
         android:layout_centerHorizontal="true" />
