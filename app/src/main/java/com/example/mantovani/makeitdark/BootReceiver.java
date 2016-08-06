@@ -22,12 +22,12 @@ public class BootReceiver extends BroadcastReceiver {
 
             long lastScreenUnlock = System.currentTimeMillis();
             long totalTimeOff = sharedPrefs.getLong(context.getString(R.string.pref_time_off_key), 0);
-            long lastScreenLock = sharedPrefs.getLong(context.getString(R.string.pref_last_lock_key),
+            long lastScreenLock = sharedPrefs.getLong(context.getString(R.string.pref_last_lock),
                     System.currentTimeMillis());
             totalTimeOff += (lastScreenUnlock - lastScreenLock);
             sharedPrefs.edit()
                     .putLong(context.getString(R.string.pref_time_off_key), totalTimeOff)
-                    .putLong(context.getString(R.string.pref_last_unlock_key), lastScreenUnlock)
+                    .putLong(context.getString(R.string.pref_last_unlock), lastScreenUnlock)
                     .apply();
 
             Intent serviceIntent = new Intent(context, MonitorService.class);

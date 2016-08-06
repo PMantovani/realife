@@ -36,14 +36,14 @@ public class Tab0Fragment extends Fragment {
     SeekBar goalSeekBar;
     SharedPreferences sharedPrefs;
     Timer guiUpdateTimer;
-    long dailyOn;
+    long dayOn;
     long goal;
 
     final Handler myHandler = new Handler();
     TextRunnable myRunnable;
 
     public class TextRunnable implements Runnable {
-        long counter = dailyOn;
+        long counter = dayOn;
         @Override
         public void run() {
             // Sets text view and increases one second in total time on
@@ -61,16 +61,10 @@ public class Tab0Fragment extends Fragment {
                 PreferenceManager.getDefaultSharedPreferences(getContext());
 
         // Loads total time device is on
-        dailyOn = sharedPrefs.getLong(getString(R.string.pref_daily_on_key), 1);
+        dayOn = sharedPrefs.getLong(getString(R.string.pref_day_on), 1);
         goal = sharedPrefs.getLong(getString(R.string.pref_goal_key), 60); // Default goal = 60 min
 
-        long now = System.currentTimeMillis();
-        long lastUnlock = sharedPrefs.getLong(getString(R.string.pref_last_unlock_key), now);
-        long lastLock = sharedPrefs.getLong(getString(R.string.pref_last_lock_key), now);
-        long diff = now - lastUnlock;
-        if (lastUnlock >= lastLock) {
-            dailyOn += diff;
-        }
+        dayOn = Utilities.addTimeDiffFromLastUnlock(getContext(), dayOn);
 
         // Initialize runnable for text update
         myRunnable = new TextRunnable();
@@ -155,7 +149,7 @@ public class Tab0Fragment extends Fragment {
         List<PieEntry> entries = new ArrayList<>();
 
         final long minutesInADay = 24 * 60;
-        long dailyInMinutes = dailyOn/(1000 * 60);
+        long dailyInMinutes = dayOn /(1000 * 60);
         int[] colors;
         if (dailyInMinutes > goal) {
             // User has exceeded goal, put only two entries in graph
@@ -212,9 +206,9 @@ public class Tab0Fragment extends Fragment {
 
             sharedPrefs.edit()
                     .clear()
-                    .putLong(getString(R.string.pref_last_unlock_key), System.currentTimeMillis())
-                    .putLong(getString(R.string.pref_last_lock_key), System.currentTimeMillis())
-                    .putLong(getString(R.string.pref_daily_on_key), 0)
+                    .putLong(getString(R.string.pref_last_unlock), System.currentTimeMillis())
+                    .putLong(getString(R.string.pref_last_lock), System.currentTimeMillis())
+                    .putLong(getString(R.string.pref_day_on), 0)
                     .apply();
         }
         return super.onOptionsItemSelected(item);

@@ -5,13 +5,13 @@
     <string name="percentage">0%</string>
 
 
-    <string name="pref_time_on_key">timeOnPref</string>
+    <string name="pref_total_on">timeOnPref</string>
     <string name="pref_time_off_key">timeOffPref</string>
-    <string name="pref_hour_on_key">hourOnPref</string>
+    <string name="pref_hour_on">hourOnPref</string>
     <string name="pref_hour_off_key">hourOffPref</string>
-    <string name="pref_last_unlock_key">lastUnlockPref</string>
-    <string name="pref_last_lock_key">lastLockPref</string>
-    <string name="pref_daily_on_key">dailyOnPref</string>
+    <string name="pref_last_unlock">lastUnlockPref</string>
+    <string name="pref_last_lock">lastLockPref</string>
+    <string name="pref_day_on">dailyOnPref</string>
     <string name="pref_goal_key">goalPref</string>
 
 

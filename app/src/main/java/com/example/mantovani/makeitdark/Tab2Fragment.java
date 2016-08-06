@@ -184,14 +184,9 @@ public class Tab2Fragment extends Fragment {
 
         // Adds today to list
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        long today = sharedPrefs.getLong(getString(R.string.pref_daily_on_key), 0);
-        long now = System.currentTimeMillis();
-        long lastUnlock = sharedPrefs.getLong(getString(R.string.pref_last_unlock_key), now);
-        long lastLock = sharedPrefs.getLong(getString(R.string.pref_last_lock_key), now);
-        long diff = now - lastUnlock;
-        if (lastUnlock >= lastLock) {
-            today += diff;
-        }
+        long today = sharedPrefs.getLong(getString(R.string.pref_day_on), 0);
+        today = Utilities.addTimeDiffFromLastUnlock(getContext(), today);
+
         today = today / (60 * 1000);
         list.add((float)today);
 
@@ -210,7 +205,6 @@ public class Tab2Fragment extends Fragment {
         for (int i=0; i<24; i++) {
             total += cursor.getFloat(cursor.getColumnIndex("h"+i));
         }
-        // Divide by 24 hours of the day
         return total;
     }
 }

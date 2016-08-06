@@ -79,12 +79,9 @@ public class Tab1Fragment extends Fragment {
                 else { // Current hour = calculate
                     // Implements percentage for the current hour, since it's still not in the database
                     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on_key), 1);
+                    float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 1);
 
-                    long now = System.currentTimeMillis();
-                    long lastUnlock = sharedPrefs.getLong(getString(R.string.pref_last_unlock_key), now);
-                    long diff = now - lastUnlock;
-                    hourOn += diff;
+                    hourOn = Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
 
                     minutes = (int)hourOn/(60*1000);
                     entries.add(new BarEntry(hourNow, minutes));
@@ -98,12 +95,9 @@ public class Tab1Fragment extends Fragment {
             //noData.setVisibility(TextView.VISIBLE);
 
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on_key), 1);
+            float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 1);
 
-            long now = System.currentTimeMillis();
-            long lastUnlock = sharedPrefs.getLong(getString(R.string.pref_last_unlock_key), now);
-            long diff = now - lastUnlock;
-            hourOn += diff;
+            hourOn = Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
 
             int minutes = (int)hourOn/(60*1000);
             entries.add(new BarEntry(hourNow, minutes));

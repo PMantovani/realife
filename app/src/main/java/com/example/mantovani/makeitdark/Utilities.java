@@ -1,7 +1,9 @@
 package com.example.mantovani.makeitdark;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 
 import java.util.Locale;
 
@@ -116,5 +118,21 @@ public class Utilities {
             // Return red
             return (Color.rgb(255,153,153));
         }
+    }
+
+    // Adds time difference from now and last unlock
+    public static long addTimeDiffFromLastUnlock(Context context, long time) {
+        // Get our shared preferences
+        SharedPreferences sharedPrefs =
+                PreferenceManager.getDefaultSharedPreferences(context);
+
+        long now = System.currentTimeMillis();
+        long lastUnlock = sharedPrefs.getLong(context.getString(R.string.pref_last_unlock), now);
+        long lastLock = sharedPrefs.getLong(context.getString(R.string.pref_last_lock), now);
+        long diff = now - lastUnlock;
+        if (lastUnlock > lastLock) {
+            time += diff;
+        }
+        return time;
     }
 }

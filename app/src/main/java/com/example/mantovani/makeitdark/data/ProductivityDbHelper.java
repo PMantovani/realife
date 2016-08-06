@@ -11,7 +11,7 @@ import com.example.mantovani.makeitdark.data.ProductivityContract.DayEntry;
 public class ProductivityDbHelper extends SQLiteOpenHelper{
 
     // If you change the database schema, you must increment the database version.
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     static final String DATABASE_NAME = "productivity.db";
 
@@ -58,8 +58,12 @@ public class ProductivityDbHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         // Executed when database version (schema) is updated
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DayEntry.TABLE_NAME);
-        onCreate(sqLiteDatabase);
+      //  sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DayEntry.TABLE_NAME);
+        //onCreate(sqLiteDatabase);
     }
 
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //super.onDowngrade(db, oldVersion, newVersion);
+    }
 }
