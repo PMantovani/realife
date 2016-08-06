@@ -49,7 +49,8 @@ public class ProductivityDbHelper extends SQLiteOpenHelper{
                 DayEntry.COLUMN_HOUR22 + " REAL, " +
                 DayEntry.COLUMN_HOUR23 + " REAL, " +
                 DayEntry.COLUMN_DATE + " TEXT NOT NULL UNIQUE, " +
-                DayEntry.COLUMN_DATE_INT + " INTEGER NOT NULL UNIQUE" +
+                DayEntry.COLUMN_DATE_INT + " INTEGER NOT NULL UNIQUE, " +
+                DayEntry.COLUMN_PICKS + " INTEGER NOT NULL" +
                 " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_DAY_TABLE);

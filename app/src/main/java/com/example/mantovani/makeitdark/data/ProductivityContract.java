@@ -63,6 +63,7 @@ public class ProductivityContract {
         public static final String COLUMN_DAY_PERCENTAGE = "percentage";
         public static final String COLUMN_DATE = "date";
         public static final String COLUMN_DATE_INT = "dateInt";
+        public static final String COLUMN_PICKS = "picks";
 
         public static Uri buildDayUri(long id) {
             return ContentUris.withAppendedId(CONTENT_URI, id);

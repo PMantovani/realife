@@ -84,7 +84,7 @@ public class Tab0Fragment extends Fragment {
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 TextView goalTextView = (TextView) rootView.findViewById(R.id.goal_textView);
                 goal = progress;
-                if (goal != 240)
+                if (goal != 241)
                     goalTextView.setText(Utilities.formatTimeMinutes(goal, false, getContext()));
                 else {
                     goalTextView.setText(getString(R.string.no_goal));
