@@ -149,7 +149,6 @@ public class MonitorService extends Service {
                 }
                 // Create new record for date in db, insert
                 else {
-                    //Uri insertUri = ProductivityContract.DayEntry.CONTENT_URI;
                     ContentValues values = new ContentValues();
                     values.put("h"+Integer.toString(hour), timeOn);
                     values.put(ProductivityContract.DayEntry.COLUMN_DATE,
@@ -267,7 +266,7 @@ public class MonitorService extends Service {
                 }
 
                 sharedPrefs.edit()
-                        .putLong(getString(R.string.pref_total_on), hourOn)
+                        .putLong(getString(R.string.pref_hour_on), hourOn)
                         .putLong(getString(R.string.pref_last_lock), lastScreenLock)
                         .apply();
                 Log.d("MAKEITDARK", "RECEIVED ACTION_SCREEN_OFF");
