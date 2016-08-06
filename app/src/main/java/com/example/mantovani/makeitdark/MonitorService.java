@@ -202,7 +202,7 @@ public class MonitorService extends Service {
         /* Start broadcast receiver */
         /* Has to pass actions */
         filter = new IntentFilter();
-        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_SHUTDOWN);
 
@@ -226,6 +226,7 @@ public class MonitorService extends Service {
 
     public class ScreenBroadReceiver extends BroadcastReceiver {
         Timer timer;
+        boolean lastActionWasUnlock = true;
 
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -233,7 +234,8 @@ public class MonitorService extends Service {
             readData();
 
             // User turned screen on
-            if (action.equals(Intent.ACTION_SCREEN_ON)) {
+            if (action.equals(Intent.ACTION_USER_PRESENT)) {
+                lastActionWasUnlock = true;
                 lastScreenUnlock = System.currentTimeMillis();
 
                 // Schedules notification for exceeding goal time limit
@@ -248,11 +250,18 @@ public class MonitorService extends Service {
                         .putLong(getString(R.string.pref_picks_today), picksToday+1)
                         .apply();
 
-                Log.d("MAKEITDARK", "RECEIVED ACTION_SCREEN_ON");
+                Log.d("MAKEITDARK", "RECEIVED ACTION_USER_PRESENT");
             }
             // User turned screen off
             else if (action.equals(Intent.ACTION_SCREEN_OFF)
                     || action.equals(Intent.ACTION_SHUTDOWN)) {
+                // If user didn't have phone unlocked, do not continue!
+                if (!lastActionWasUnlock) {
+                    lastActionWasUnlock = false;
+                    return;
+                }
+                lastActionWasUnlock = false;
+
                 lastScreenLock = System.currentTimeMillis();
                 long diff = lastScreenLock - lastScreenUnlock;
                 if (diff > 0) {
