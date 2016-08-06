@@ -21,12 +21,7 @@ public class BootReceiver extends BroadcastReceiver {
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 
             long lastScreenUnlock = System.currentTimeMillis();
-            long totalTimeOff = sharedPrefs.getLong(context.getString(R.string.pref_time_off_key), 0);
-            long lastScreenLock = sharedPrefs.getLong(context.getString(R.string.pref_last_lock),
-                    System.currentTimeMillis());
-            totalTimeOff += (lastScreenUnlock - lastScreenLock);
             sharedPrefs.edit()
-                    .putLong(context.getString(R.string.pref_time_off_key), totalTimeOff)
                     .putLong(context.getString(R.string.pref_last_unlock), lastScreenUnlock)
                     .apply();
 

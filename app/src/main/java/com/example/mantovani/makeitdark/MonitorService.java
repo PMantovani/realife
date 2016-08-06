@@ -1,7 +1,6 @@
 package com.example.mantovani.makeitdark;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -13,15 +12,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.os.PowerManager;
 import android.preference.PreferenceManager;
-import android.support.v4.app.TaskStackBuilder;
-import android.support.v7.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.mantovani.makeitdark.data.ProductivityContract;
 
@@ -93,6 +87,7 @@ public class MonitorService extends Service {
                 // Checks if date has changed
                 if (now.get(Calendar.DATE) != oneHourAgo.get(Calendar.DATE)) {
                     dayOn = 0; // Reset daily counter if so
+                    sharedPrefs.edit().putLong(getString(R.string.pref_picks_today), 0).apply();
                 }
 
                 // Update "lastScreenLock and lastScreenUnlock" so you don't add it twice
@@ -101,6 +96,11 @@ public class MonitorService extends Service {
                 lastScreenLock = lastScreenUnlock;
 
                 addToDatabase(hourOn);
+
+                // Test notification
+                long picks = sharedPrefs.getLong(getString(R.string.pref_picks_today), 0);
+                String notifStr = "You picked your phone " + picks + " times today!";
+                Utilities.createNotification(getApplicationContext(), notifStr);
 
                 hourOn = 0;
                 sharedPrefs.edit()
@@ -160,9 +160,6 @@ public class MonitorService extends Service {
                 }
                 Log.d("MAKEITDARK", "INSERTED TO DB LAST HOUR: "+Float.toString(timeOn));
                 cursor.close();
-
-                // Test notification
-                createNotification();
             }
         };
 
@@ -192,37 +189,6 @@ public class MonitorService extends Service {
         }
     }
 
-    public void createNotification() {
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(getApplicationContext());
-        mBuilder.setSmallIcon(R.drawable.ic_notification);
-        mBuilder.setContentTitle("ReaLife");
-        mBuilder.setContentText("You spent "+Long.toString(hourOn/(60*1000))+" minutes on the phone today!");
-        mBuilder.setAutoCancel(true); // Remove notification automatically after clicking in it
-        // Create explicit intent to be executed when notification is clicked
-        Intent resultIntent = new Intent(this, MainActivity.class);
-
-        // The stack builder object will contain an artificial back stack for the
-        // started Activity.
-        // This ensures that navigating backward from the Activity leads out of
-        // your application to the Home screen.
-        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-        // Adds the back stack for the Intent (but not the Intent itself)
-        stackBuilder.addParentStack(MainActivity.class);
-        // Adds the Intent that starts the Activity to the top of the stack
-        stackBuilder.addNextIntent(resultIntent);
-        PendingIntent resultPendingIntent =
-                stackBuilder.getPendingIntent(
-                        0,
-                        PendingIntent.FLAG_UPDATE_CURRENT
-                );
-        mBuilder.setContentIntent(resultPendingIntent); // Associate notification with intent
-        NotificationManager mNotificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
-        mNotificationManager.notify(100, mBuilder.build());
-    }
-
     private void readData() {
 
         hourOn = sharedPrefs.getLong(getString(R.string.pref_hour_on), 0);
@@ -244,17 +210,6 @@ public class MonitorService extends Service {
         registerReceiver(receiver, filter);
 
         return START_STICKY;
-    }
-
-    public void postToastMessage(final String message) {
-        Handler handler = new Handler(Looper.getMainLooper());
-
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
@@ -288,8 +243,10 @@ public class MonitorService extends Service {
                 if (goal > hourOn && goal != (-999*60*1000)) // Only schedule if daily time is still smaller than goal and user has set a goal
                     timer.schedule(new TimerNotification(), goal-hourOn);
 
+                long picksToday = sharedPrefs.getLong(getString(R.string.pref_picks_today), 0);
                 sharedPrefs.edit()
                         .putLong(getString(R.string.pref_last_unlock), lastScreenUnlock)
+                        .putLong(getString(R.string.pref_picks_today), picksToday+1)
                         .apply();
 
                 Log.d("MAKEITDARK", "RECEIVED ACTION_SCREEN_ON");
@@ -324,7 +281,8 @@ public class MonitorService extends Service {
     public class TimerNotification extends TimerTask {
         @Override
         public void run() {
-            createNotification();
+            String notifStr = "You reached your daily limit of " + sharedPrefs.getLong(getString(R.string.pref_goal_key), 0) + " minutes!";
+            Utilities.createNotification(getApplicationContext(), notifStr);
         }
     }
 }

@@ -78,6 +78,7 @@ public class Tab0Fragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.tab_0, container, false);
         dailyOnTextView = (TextView) rootView.findViewById(R.id.time_on_textView);
+
         goalSeekBar = (SeekBar) rootView.findViewById(R.id.goal_seekBar);
         goalSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -111,6 +112,10 @@ public class Tab0Fragment extends Fragment {
     public void onResume() {
         // Draws the chart
         drawPieChart();
+
+        // Loads number of picks today
+        TextView picksTextView = (TextView) rootView.findViewById(R.id.picks_textView);
+        picksTextView.setText(""+sharedPrefs.getLong(getString(R.string.pref_picks_today), 0));
 
         // Loads goal value into seek bar
         TextView goalTextView = (TextView) getActivity().findViewById(R.id.goal_textView);
