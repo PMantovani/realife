@@ -80,7 +80,7 @@ public class Tab1Fragment extends Fragment {
                     // Implements percentage for the current hour, since it's still not in the database
                     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 1);
-                    hourOn += Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
+                    hourOn += Utilities.timeDiffFromLastUnlock(getContext());
 
                     minutes = (int)hourOn/(60*1000);
                     entries.add(new BarEntry(hourNow, minutes));
@@ -92,7 +92,7 @@ public class Tab1Fragment extends Fragment {
             // No data for today in database
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
             float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 0);
-            hourOn += Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
+            hourOn += Utilities.timeDiffFromLastUnlock(getContext());
 
             int minutes = (int)hourOn/(60*1000);
             entries.add(new BarEntry(hourNow, minutes));

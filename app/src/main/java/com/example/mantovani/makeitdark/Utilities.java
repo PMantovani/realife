@@ -129,7 +129,7 @@ public class Utilities {
     }
 
     // Adds time difference from now and last unlock
-    public static long addTimeDiffFromLastUnlock(Context context, long time) {
+    public static long timeDiffFromLastUnlock(Context context) {
         // Get our shared preferences
         SharedPreferences sharedPrefs =
                 PreferenceManager.getDefaultSharedPreferences(context);
@@ -139,9 +139,9 @@ public class Utilities {
         long lastLock = sharedPrefs.getLong(context.getString(R.string.pref_last_lock), now);
         long diff = now - lastUnlock;
         if (lastUnlock > lastLock) {
-            time += diff;
+            return diff;
         }
-        return time;
+        return 0;
     }
 
     public static void createNotification(Context context, String message) {
