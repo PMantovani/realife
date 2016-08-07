@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Time on the phone today"
+        android:id="@+id/today_textView"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true" />
+
+    <com.github.mikephil.charting.charts.PieChart
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/today_textView"
+        android:id="@+id/pie_chart">
+    </com.github.mikephil.charting.charts.PieChart>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/screen_time"
+        android:id="@+id/screen_time_textView"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@+id/pie_chart"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="00:00:00"
+        android:id="@+id/time_on_textView"
+        android:layout_alignBottom="@+id/screen_time_textView"
+        android:layout_toRightOf="@+id/screen_time_textView"
+        android:layout_toEndOf="@+id/screen_time_textView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="@string/num_picks"
+        android:id="@+id/picks_text_textView"
+        android:paddingTop="20dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:layout_below="@+id/screen_time_textView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="0"
+        android:id="@+id/picks_textView"
+        android:layout_alignBottom="@+id/picks_text_textView"
+        android:layout_toRightOf="@+id/picks_text_textView"
+        android:layout_toEndOf="@+id/picks_text_textView" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:paddingTop="30dp"
+        android:id="@+id/daily_goal_textView"
+        android:text="Set your daily goal"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/picks_text_textView"/>
+
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/daily_goal_textView"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginTop="30dp"
+        android:id="@+id/table"
+        android:stretchColumns="1">
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width ="wrap_content"
+                android:text="0m"
+                android:layout_height="wrap_content" />
+            <SeekBar
+                android:layout_width ="fill_parent"
+                android:layout_height="wrap_content"
+                android:max="240"
+                android:id="@+id/goal_seekBar" />
+            <TextView
+                android:layout_width ="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_goal" />
+        </TableRow>
+    </TableLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/table"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:id="@+id/goal_textView"
+        android:text="20m"/>
+
+</RelativeLayout>
