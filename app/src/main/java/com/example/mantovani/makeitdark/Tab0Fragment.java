@@ -61,10 +61,11 @@ public class Tab0Fragment extends Fragment {
                 PreferenceManager.getDefaultSharedPreferences(getContext());
 
         // Loads total time device is on
-        dayOn = sharedPrefs.getLong(getString(R.string.pref_day_on), 1);
+        dayOn = sharedPrefs.getLong(getString(R.string.pref_day_on), 0);
         goal = sharedPrefs.getLong(getString(R.string.pref_goal_key), 60); // Default goal = 60 min
 
         dayOn = Utilities.addTimeDiffFromLastUnlock(getContext(), dayOn);
+        dayOn += sharedPrefs.getLong(getString(R.string.pref_hour_on), 0); // Add current hour On
 
         // Initialize runnable for text update
         myRunnable = new TextRunnable();
