@@ -136,7 +136,7 @@ public class Tab2Fragment extends Fragment {
             // write your logic here
             if (value >= 1) // If more than one minute
                 // Multiplies by 60*1000 because formatTime works in milliseconds
-                return Utilities.formatTime((long) value*60*1000, false, getContext());
+                return Utilities.formatTime((long)value, getString(R.string.minutes_letter), false, getContext());
             else // Don't show anything if less than a minute
                 return "";
         }

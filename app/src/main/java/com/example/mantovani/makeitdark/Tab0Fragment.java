@@ -48,7 +48,7 @@ public class Tab0Fragment extends Fragment {
         public void run() {
             // Sets text view and increases one second in total time on
             counter += 1000;
-            dailyOnTextView.setText(Utilities.formatTime(counter, getContext()));
+            dailyOnTextView.setText(Utilities.formatTime(counter, getString(R.string.millisec_letter), true, getContext()));
         }
     }
 
@@ -87,7 +87,7 @@ public class Tab0Fragment extends Fragment {
                 TextView goalTextView = (TextView) rootView.findViewById(R.id.goal_textView);
                 goal = progress;
                 if (goal != 241)
-                    goalTextView.setText(Utilities.formatTimeMinutes(goal, false, getContext()));
+                    goalTextView.setText(Utilities.formatTime(goal, getString(R.string.minutes_letter), false, getContext()));
                 else {
                     goalTextView.setText(getString(R.string.no_goal));
                     goal = -999;
@@ -120,7 +120,7 @@ public class Tab0Fragment extends Fragment {
 
         // Loads goal value into seek bar
         TextView goalTextView = (TextView) getActivity().findViewById(R.id.goal_textView);
-        goalTextView.setText(Utilities.formatTimeMinutes(goal, false, getContext()));
+        goalTextView.setText(Utilities.formatTime(goal, getString(R.string.minutes_letter), false, getContext()));
         SeekBar goalSeekBar = (SeekBar) getActivity().findViewById(R.id.goal_seekBar);
         goalSeekBar.setProgress((int) goal);
 
@@ -180,7 +180,7 @@ public class Tab0Fragment extends Fragment {
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return Utilities.formatTimeMinutes((long)value, false, getActivity());
+                return Utilities.formatTime((long)value, getString(R.string.minutes_letter), false, getActivity());
             }
         });
 

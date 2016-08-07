@@ -95,15 +95,7 @@ public class Utilities {
         }
         return formatted;
     }
-
-    public static String formatTimeMinutes(long minutes, boolean showSeconds, Context context) {
-        return formatTime(minutes*60*1000, showSeconds, context);
-    }
-
-    public static String formatTime(long milliseconds, Context context) {
-        return formatTime(milliseconds, true, context);
-    }
-
+    
     public static int calculateColor(long minutes) {
         //int green = Color.rgb(153, 255, 153);
         //int yellow = Color.rgb(255, 255, 153);

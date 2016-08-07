@@ -172,7 +172,7 @@ public class Tab1Fragment extends Fragment {
             // write your logic here
             if (value >= 1) // If more than one minute
                 // Multiplies by 60*1000 because formatTime works in milliseconds
-                return Utilities.formatTime((long) value*60*1000, false, getContext());
+                return Utilities.formatTime((long)value, getString(R.string.minutes_letter), false, getContext());
                 //return mFormat.format(value) + "m";//"%"; // e.g. append a % sign
             else
                 return "";
