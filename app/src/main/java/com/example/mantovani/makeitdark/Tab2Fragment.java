@@ -185,7 +185,8 @@ public class Tab2Fragment extends Fragment {
         // Adds today to list
         SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         long today = sharedPrefs.getLong(getString(R.string.pref_day_on), 0);
-        today = Utilities.addTimeDiffFromLastUnlock(getContext(), today);
+        today += Utilities.addTimeDiffFromLastUnlock(getContext(), today);
+        today += sharedPrefs.getLong(getString(R.string.pref_hour_on), 0); // Add current hour On
 
         today = today / (60 * 1000);
         list.add((float)today);

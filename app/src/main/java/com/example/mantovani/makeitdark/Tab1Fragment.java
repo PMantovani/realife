@@ -80,8 +80,7 @@ public class Tab1Fragment extends Fragment {
                     // Implements percentage for the current hour, since it's still not in the database
                     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
                     float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 1);
-
-                    hourOn = Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
+                    hourOn += Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
 
                     minutes = (int)hourOn/(60*1000);
                     entries.add(new BarEntry(hourNow, minutes));
@@ -90,17 +89,18 @@ public class Tab1Fragment extends Fragment {
             }
         }
         else {
-            // In case no data is available, display TextView with the info
-            //TextView noData = (TextView) getActivity().findViewById(R.id.no_data_textView);
-            //noData.setVisibility(TextView.VISIBLE);
-
+            // No data for today in database
             SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-            float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 1);
-
-            hourOn = Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
+            float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 0);
+            hourOn += Utilities.addTimeDiffFromLastUnlock(getContext(), (long)hourOn);
 
             int minutes = (int)hourOn/(60*1000);
             entries.add(new BarEntry(hourNow, minutes));
+            colors[0] = Utilities.calculateColor(minutes);
+            for (int i=1; i<24; i++) {
+                entries.add(new BarEntry(i, 0));
+                colors[i] = Utilities.calculateColor(0);
+            }
         }
         cursor.close();
 
@@ -144,7 +144,7 @@ public class Tab1Fragment extends Fragment {
 
         BarData data = new BarData(barDataSet);
         barChart.setData(data);
-
+        barChart.setFitBars(true);
         barChart.setTouchEnabled(true);
         barChart.setDragEnabled(true);
         barChart.setScaleEnabled(false);
