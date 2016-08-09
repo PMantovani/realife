@@ -4,5 +4,6 @@
         <item>Daily</item>
         <item>Hourly</item>
         <item>History</item>
+        <item>App Usage</item>
     </string-array>
 </resources>

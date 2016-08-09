@@ -168,6 +168,7 @@ public class Tab2Fragment extends Fragment {
                     cursor.moveToNext();
                     cal.add(Calendar.DATE, 1);
                 }
+
                 else {
                     // In case the day is not found in the database, insert zero
                     list.add((float)0);

@@ -126,6 +126,11 @@ public class MainActivity extends AppCompatActivity {
                     .replace(R.id.content_frame, new Tab2Fragment())
                     .commit();
         }
+        else if (position == 3) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, new Tab3Fragment())
+                    .commit();
+        }
 
         // Highlight the selected item, update the title, and close the drawer
         mDrawerList.setItemChecked(position, true);

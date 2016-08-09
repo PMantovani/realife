@@ -5,7 +5,10 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.preference.PreferenceManager;
@@ -95,7 +98,7 @@ public class Utilities {
         }
         return formatted;
     }
-    
+
     public static int calculateColor(long minutes) {
         //int green = Color.rgb(153, 255, 153);
         //int yellow = Color.rgb(255, 255, 153);
@@ -177,5 +180,45 @@ public class Utilities {
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public static String getAppNameFromPackageName(String packageName, Context context) {
+        final PackageManager pm = context.getApplicationContext().getPackageManager();
+        ApplicationInfo ai;
+        try {
+            ai = pm.getApplicationInfo(packageName, 0);
+        } catch (final PackageManager.NameNotFoundException e) {
+            ai = null;
+        }
+        return (String) (ai != null ? pm.getApplicationLabel(ai) : "(unknown)");
+    }
+
+    public static Drawable getAppIcon (String packageName, Context context) {
+        try {
+            return context.getApplicationContext()
+                    .getPackageManager().getApplicationIcon(packageName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // Check if package is a system package
+    public static boolean isSystemPackage(String packageName, Context context) {
+        PackageManager pm = context.getApplicationContext().getPackageManager();
+        ApplicationInfo ai = null;
+        try {
+            ai = pm.getApplicationInfo(packageName, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        if (pm.getLaunchIntentForPackage(ai.packageName) != null) {
+            //This app is a non-system app
+            return false;
+        } else {
+            //System App
+            return true;
+        }
     }
 }
