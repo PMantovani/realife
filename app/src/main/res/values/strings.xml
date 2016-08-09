@@ -65,4 +65,10 @@
 
     <string name="no_data">No Data Available... Yet!</string>
     <string name="no_goal">No goal</string>
+    <string name="ask_for_permission_dialog">In order to enable our app tracking capability,
+        you need to grant us permission to do so on the next screen.
+        Please add ReaLife to the list of apps with usage access."</string>
+    <string name="title_dialog">App Tracking Capability</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 </resources>

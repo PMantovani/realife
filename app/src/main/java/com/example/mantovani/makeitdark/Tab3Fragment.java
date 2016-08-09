@@ -73,17 +73,15 @@ public class Tab3Fragment extends Fragment {
 
     private void buildDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("In order to enable our app tracking capability, " +
-                "you need to grant us permission to do so on the next screen." +
-                "Please add ReaLife to the list.")
-                .setTitle("App Tracking Capability");
-        builder.setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
+        builder.setMessage(getString(R.string.ask_for_permission_dialog))
+                .setTitle(getString(R.string.title_dialog));
+        builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User clicked OK button
                 startActivityForResult(new Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS), 0);
             }
         });
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 // User cancelled the dialog
             }
