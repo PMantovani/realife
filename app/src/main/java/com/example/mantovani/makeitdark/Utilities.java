@@ -211,6 +211,7 @@ public class Utilities {
             ai = pm.getApplicationInfo(packageName, 0);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
+            return true;
         }
 
         if (pm.getLaunchIntentForPackage(ai.packageName) != null) {

@@ -55,20 +55,24 @@ public class Tab3Fragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listView);
         listView.setAdapter(cAdapter);
 
+        return rootView;
+    }
+
+    @Override
+    public void onResume() {
         if (!hasPermission()) {
             buildDialog();
         }
         addStatsToAdapter();
 
-        return rootView;
+        super.onResume();
     }
 
     private boolean hasPermission() {
         AppOpsManager appOps = (AppOpsManager) getActivity().getApplicationContext().getSystemService(Context.APP_OPS_SERVICE);
         int mode = appOps.checkOpNoThrow("android:get_usage_stats",
                 android.os.Process.myUid(), getActivity().getApplicationContext().getPackageName());
-        boolean granted = mode == AppOpsManager.MODE_ALLOWED;
-        return granted;
+        return mode == AppOpsManager.MODE_ALLOWED;
     }
 
     private void buildDialog() {
@@ -143,7 +147,6 @@ public class Tab3Fragment extends Fragment {
         }
     }
 
-
     private Map<String, UsageStats> getAppStats() {
         // Get usage stats for all apps
         UsageStatsManager usm = (UsageStatsManager)getContext().getSystemService("usagestats");
@@ -151,6 +154,7 @@ public class Tab3Fragment extends Fragment {
         Calendar calendar = Calendar.getInstance();
         long endTime = calendar.getTimeInMillis();
         // Start time is beggining of the day
+        calendar.add(Calendar.DATE, 0);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

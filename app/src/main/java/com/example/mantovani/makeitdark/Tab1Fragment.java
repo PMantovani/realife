@@ -79,7 +79,7 @@ public class Tab1Fragment extends Fragment {
                 else { // Current hour = calculate
                     // Implements percentage for the current hour, since it's still not in the database
                     SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-                    float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 1);
+                    float hourOn = (float) sharedPrefs.getLong(getString(R.string.pref_hour_on), 0);
                     hourOn += Utilities.timeDiffFromLastUnlock(getContext());
 
                     minutes = (int)hourOn/(60*1000);

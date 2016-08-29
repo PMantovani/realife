@@ -59,12 +59,12 @@ public class ProductivityDbHelper extends SQLiteOpenHelper{
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         // Executed when database version (schema) is updated
-      //  sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DayEntry.TABLE_NAME);
-        //onCreate(sqLiteDatabase);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DayEntry.TABLE_NAME);
+        onCreate(sqLiteDatabase);
     }
 
     @Override
     public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //super.onDowngrade(db, oldVersion, newVersion);
+        super.onDowngrade(db, oldVersion, newVersion);
     }
 }

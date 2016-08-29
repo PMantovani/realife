@@ -1,6 +1,7 @@
 package com.example.mantovani.makeitdark;
 
 import android.app.AlarmManager;
+import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -13,8 +14,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.preference.PreferenceManager;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 import com.example.mantovani.makeitdark.data.ProductivityContract;
@@ -48,6 +49,14 @@ public class MonitorService extends Service {
 
     @Override
     public void onCreate() {
+        // Start out service in foreground
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("ReaLife")
+                .setContentText("Monitoring screen usage!")
+                .setContentIntent(pendingIntent).build();
+        startForeground(1337, notification);
 
         // Get our shared preferences
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -60,6 +69,7 @@ public class MonitorService extends Service {
 
         // This will set an alarm every hour to get hourly info about productivity
         setAlarm();
+        Utilities.postToastMessage(getApplicationContext(), "SERVICE CREATED");
 
         super.onCreate();
     }
@@ -70,10 +80,9 @@ public class MonitorService extends Service {
             @Override public void onReceive( Context context, Intent _ ) {
                 Log.d("MAKEITDARK", "SCHEDULER: "+new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
-                PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-                boolean isScreenOn = pm.isScreenOn();
+                long diffUnlockLock = lastScreenUnlock - lastScreenLock;
                 // Add elapsed time since last lock/unlock
-                if (isScreenOn)
+                if (diffUnlockLock > 0)
                     hourOn += (System.currentTimeMillis() - lastScreenUnlock);
 
                 long dayOn = sharedPrefs.getLong(getString(R.string.pref_day_on), 0);
@@ -220,6 +229,7 @@ public class MonitorService extends Service {
     public void onDestroy() {
         // Unregister BroadcastReceiver on destroy of service
         unregisterReceiver(receiver);
+        Utilities.postToastMessage(getApplicationContext(), "SERVICE DESTROYED");
 
         super.onDestroy();
     }
@@ -231,7 +241,7 @@ public class MonitorService extends Service {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            readData();
+            //readData();
 
             // User turned screen on
             if (action.equals(Intent.ACTION_USER_PRESENT)) {
