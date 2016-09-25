@@ -1,7 +1,6 @@
 package com.example.mantovani.makeitdark;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
@@ -49,14 +48,15 @@ public class MonitorService extends Service {
 
     @Override
     public void onCreate() {
-        // Start out service in foreground
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-        Notification notification = new NotificationCompat.Builder(this)
-                .setContentTitle("ReaLife")
-                .setContentText("Monitoring screen usage!")
-                .setContentIntent(pendingIntent).build();
-        startForeground(1337, notification);
+        // TODO: PUT USEFUL INFO IN THIS NOTIFICATION
+        // Start out service in foreground and associates it with the following notification
+        NotificationCompat.Builder notBuilder =
+                new NotificationCompat.Builder(this);
+        notBuilder.setSmallIcon(R.drawable.ic_notification);
+        notBuilder.setContentTitle("ReaLife");
+        notBuilder.setContentText("Monitoring smartphone usage");
+
+        startForeground(1337, notBuilder.build());
 
         // Get our shared preferences
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this);
@@ -77,7 +77,7 @@ public class MonitorService extends Service {
     public void setAlarm() {
 
         BroadcastReceiver receiverHourly = new BroadcastReceiver() {
-            @Override public void onReceive( Context context, Intent _ ) {
+            @Override public void onReceive( Context context, Intent intent ) {
                 Log.d("MAKEITDARK", "SCHEDULER: "+new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").format(new Date()));
 
                 long diffUnlockLock = lastScreenUnlock - lastScreenLock;
