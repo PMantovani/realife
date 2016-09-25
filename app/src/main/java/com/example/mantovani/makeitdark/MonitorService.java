@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.IBinder;
@@ -48,11 +50,14 @@ public class MonitorService extends Service {
 
     @Override
     public void onCreate() {
-        // TODO: PUT USEFUL INFO IN THIS NOTIFICATION
+        // TODO: PUT USEFUL INFO IN THIS NOTIFICATION, ALSO FIX NOTIFICATION ICON
         // Start out service in foreground and associates it with the following notification
         NotificationCompat.Builder notBuilder =
                 new NotificationCompat.Builder(this);
-        notBuilder.setSmallIcon(R.drawable.ic_notification);
+        // Converts Drawable into Bitmap
+        Bitmap icon = BitmapFactory.decodeResource(this.getResources(),
+                R.drawable.ic_notification);
+        notBuilder.setLargeIcon(icon);
         notBuilder.setContentTitle("ReaLife");
         notBuilder.setContentText("Monitoring smartphone usage");
 
