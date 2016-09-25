@@ -32,12 +32,6 @@
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".DateReceiver" android:enabled="true" android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.DATE_CHANGED"/>
-            </intent-filter>
-        </receiver>
-
         <provider
             android:authorities="com.example.mantovani.makeitdark"
             android:name="com.example.mantovani.makeitdark.data.ProductivityProvider">
